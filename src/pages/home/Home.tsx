@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AppLogo from "./assets/app-logo.png";
-import SplashScreen from "./SplashScreen";
+import AppLogo from "../../assets/app-logo.png";
+import SplashScreen from "../../components/SplashScreen";
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
   if (loading) return <SplashScreen />;
@@ -20,7 +20,7 @@ function Home() {
         <img src={AppLogo} alt="App Logo" className="w-40 h-40 mt-40" />
       </div>
       <div className="">
-        <p className="text-[#1D546D] font-bold font-italic text-center text-3xl mt-10">
+        <p className="text-[#1D546D] font-bold italic text-center text-3xl mt-10">
           Welcome
         </p>
       </div>

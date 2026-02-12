@@ -1,4 +1,4 @@
-import AppLogo from "./assets/app-logo.png";
+import AppLogo from "@/assets/app-logo.png";
 
 function SplashScreen() {
   return (

@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Dashboard from "./Dashboard";
-import Home from "./Home";
-import LandingPage from "./LandingPage";
-import LogIn from "./LogIn";
-import SignUp from "./SignUp";
-import SplashScreen from "./SplashScreen";
+import LogIn from "../src/pages/auth/LogIn";
+import SplashScreen from "./components/SplashScreen";
+import SignUp from "./pages/auth/SignUp";
+import Dashboard from "./pages/home/Dashboard";
+import Home from "./pages/home/Home";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   const router = createBrowserRouter([

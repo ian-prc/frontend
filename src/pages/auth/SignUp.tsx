@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaRegUserCircle, FaUser } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogIn from "./LogIn";
 
 function SignUp() {
@@ -11,7 +11,7 @@ function SignUp() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
   if (loading) return <LogIn />;
@@ -21,7 +21,7 @@ function SignUp() {
       <div className="relative ">
         <FaRegUserCircle className="absolute -top-60 -traslate-y-1/2 left-35 text-9xl text-[#5F9598]" />
       </div>
-      <div className="bg-[#1D546D] w-120 h-150 rounded-4xl mt-130 px-5 flex flex-col gap-8">
+      <div className="bg-[#1D546D] w-120 h-150 rounded-4xl mt-130 px-5 flex flex-col gap-5">
         <div className="relative">
           <FaUser className="absolute top-22 -translate-y-1/2 left-3" />
           <input
@@ -53,6 +53,11 @@ function SignUp() {
             placeholder="Confirm password"
             className="w-full bg-white p-3 px-8 rounded-full border-2 "
           />
+        </div>
+        <div className="pl-55">
+          <Link to="/login" className="text-white hover:underline">
+            Term and Condition
+          </Link>
         </div>
         <div className="flex justify-center">
           <button

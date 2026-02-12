@@ -1,7 +1,6 @@
+import AppLogo from "@/assets/app-logo.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AppLogo from "./assets/app-logo.png";
-
 function LandingPage() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ function LandingPage() {
 
       <p className="text-[#1D546D] font-bold italic text-3xl mt-10">Welcome</p>
 
-      <div className="flex flex-col items-center mt-12 space-y-4">
+      <div className="flex flex-col items-center gap-1 mt-12 space-y-4">
         <button
           onClick={() => navigate("/signup")}
           className="bg-[#5F9598] text-white font-bold py-2 px-8 rounded-md hover:opacity-90 transition"
@@ -38,7 +37,7 @@ function LandingPage() {
 
         <button
           onClick={() => navigate("/login")}
-          className="bg-[#5F9598] text-white font-bold py-2 px-10 rounded-md hover:opacity-90 transition"
+          className="bg-[#5F9598] text-white font-bold py-2 px-16 rounded-md hover:opacity-90 transition"
         >
           Log In
         </button>
