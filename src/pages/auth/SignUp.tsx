@@ -1,23 +1,41 @@
-import { useEffect, useState } from "react";
+import { useAuthStore } from "@/stores/auth/auth.store";
+import type { AccountType } from "@/types/account/account.type";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FaRegUserCircle, FaUser } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import LogIn from "./LogIn";
 
 function SignUp() {
-  const [loading, setLoading] = useState(true);
+  const { loading, setRegister } = useAuthStore();
+
+  const [form, setForm] = useState<Partial<AccountType>>({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
-  if (loading) return <LogIn />;
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const submitForm = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log("From: ", form);
+    const success = await setRegister(form);
+    if (success) {
+      navigate("/login");
+    }
+  };
 
   return (
-    <div className="bg-[#F5F5F5] w-screnn h-screen flex justify-center items-center">
+    <form
+      onSubmit={submitForm}
+      className="bg-[#F5F5F5] w-screnn h-screen flex justify-center items-center"
+    >
       <div className="relative ">
         <FaRegUserCircle className="absolute -top-60 -traslate-y-1/2 left-35 text-9xl text-[#5F9598]" />
       </div>
@@ -25,7 +43,8 @@ function SignUp() {
         <div className="relative">
           <FaUser className="absolute top-22 -translate-y-1/2 left-3" />
           <input
-            type="text"
+            name="name"
+            onChange={handleChange}
             placeholder="Enter your username"
             className="w-full bg-white p-3 px-8 rounded-full border-2 mt-15"
           />
@@ -33,7 +52,9 @@ function SignUp() {
         <div className="relative">
           <MdEmail className="absolute top-1/2 -translate-y-1/2 left-3" />
           <input
-            type="text"
+            name="email"
+            type="email"
+            onChange={handleChange}
             placeholder="Enter email"
             className="w-full bg-white p-3 px-8 rounded-full border-2 "
           />
@@ -41,7 +62,9 @@ function SignUp() {
         <div className="relative">
           <IoIosLock className="absolute top-1/2 -translate-y-1/2 left-3" />
           <input
-            type="text"
+            name="password"
+            type="password"
+            onChange={handleChange}
             placeholder="Enter password"
             className="w-full bg-white p-3 px-8 rounded-full border-2 "
           />
@@ -61,14 +84,19 @@ function SignUp() {
         </div>
         <div className="flex justify-center">
           <button
-            onClick={() => navigate("/login")}
-            className="bg-[#5F9598] text-white font-bold text-center w-30 py-2 px-2 rounded-full"
+            type="submit"
+            className="bg-[#5F9598] text-white font-bold text-center w-30 py-2 px-2 rounded-full cursor-pointer"
           >
-            SignUp
+            {" "}
+            {loading ? "Loading.." : "Register"}{" "}
           </button>
         </div>
+        <Link to="/auth/LogIn" className="text-secondary text-white ml-15">
+          {" "}
+          Already have an account? Login here{" "}
+        </Link>
       </div>
-    </div>
+    </form>
   );
 }
 export default SignUp;

@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LogIn from "../src/pages/auth/LogIn";
 import SplashScreen from "./components/SplashScreen";
@@ -36,6 +37,7 @@ function App() {
   return (
     <div>
       <RouterProvider router={router} />
+      <Toaster position="top-center" />
     </div>
   );
 }
