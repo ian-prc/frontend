@@ -80,8 +80,15 @@ function LogIn() {
             </button>
           </div>
         </div>
-        <Link to="/auth/signup" className="text-secondary text-white ml-15">
-          Don't have an account? Register here
+        <p className="absolute mt-87 text-white ml-10">
+          {" "}
+          Don't have an account?{" "}
+        </p>
+        <Link
+          to="/signup"
+          className="text-secondary ml-55 text-blue-100 hover:text-blue-500"
+        >
+          Register here
         </Link>
       </div>
     </form>

@@ -9,7 +9,7 @@ function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 2500);
     return () => clearTimeout(timer);
   }, []);
   if (loading) return <SplashScreen />;

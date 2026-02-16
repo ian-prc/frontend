@@ -11,7 +11,7 @@ function SplashScreen() {
           Welcome
         </p>
       </div>
-      <div className="flex items-center justify-center ml-45 mt-30 bg-[#5F9598] w-10 h-10 rounded-full border-white"></div>
+      <div className="flex items-center justify-center ml-45 mt-30 bg-[#5F9598] w-10 h-10 rounded-full animate-bounce border-white"></div>
     </div>
   );
 }

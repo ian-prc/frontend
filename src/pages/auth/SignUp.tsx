@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/stores/auth/auth.store";
 import type { AccountType } from "@/types/account/account.type";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import toast from "react-hot-toast";
 import { FaRegUserCircle, FaUser } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -13,6 +14,7 @@ function SignUp() {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const navigate = useNavigate();
@@ -24,20 +26,23 @@ function SignUp() {
 
   const submitForm = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("From: ", form);
-    const success = await setRegister(form);
-    if (success) {
-      navigate("/login");
+
+    if (form.password !== form.confirmPassword) {
+      toast.error("Password do not match.");
+      return;
     }
+
+    const success = await setRegister(form);
+    if (success) navigate("/login");
   };
 
   return (
     <form
       onSubmit={submitForm}
-      className="bg-[#F5F5F5] w-screnn h-screen flex justify-center items-center"
+      className="bg-[#F5F5F5] w-screen h-screen flex justify-center items-center"
     >
       <div className="relative ">
-        <FaRegUserCircle className="absolute -top-60 -traslate-y-1/2 left-35 text-9xl text-[#5F9598]" />
+        <FaRegUserCircle className="absolute -top-60 -translate-y-1/2 left-35 text-9xl text-[#5F9598]" />
       </div>
       <div className="bg-[#1D546D] w-120 h-150 rounded-4xl mt-130 px-5 flex flex-col gap-5">
         <div className="relative">
@@ -72,7 +77,9 @@ function SignUp() {
         <div className="relative">
           <IoIosLock className="absolute top-1/2 -translate-y-1/2 left-3" />
           <input
-            type="text"
+            name="confirmPassword"
+            type="password"
+            onChange={handleChange}
             placeholder="Confirm password"
             className="w-full bg-white p-3 px-8 rounded-full border-2 "
           />
@@ -91,7 +98,7 @@ function SignUp() {
             {loading ? "Loading.." : "Register"}{" "}
           </button>
         </div>
-        <Link to="/auth/LogIn" className="text-secondary text-white ml-15">
+        <Link to="/login" className="text-secondary text-white ml-15">
           {" "}
           Already have an account? Login here{" "}
         </Link>
