@@ -1,5 +1,5 @@
 import React from "react";
-import { HiExclamationTriangle } from "react-icons/hi2"; // Optional: Use a warning icon
+import { TiDeleteOutline } from "react-icons/ti";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -18,12 +18,12 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div className="fixed inset-0  flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-      {/* Modal Container */}
+     
       <div className="w-full max-w-sm transform overflow-hidden rounded-2xl bg-white p-6 shadow-2xl transition-all border border-slate-100">
-        {/* Warning Icon & Text */}
+        
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
-            <HiExclamationTriangle className="h-6 w-6 text-red-600" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full mb-4">
+            <TiDeleteOutline className="h-15 w-15 text-red-700" />
           </div>
 
           <h3 className="text-lg font-semibold text-slate-900">Delete Task?</h3>
@@ -36,7 +36,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           </p>
         </div>
 
-        {/* Action Buttons */}
+     
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
           <button
             onClick={onClose}

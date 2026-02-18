@@ -5,7 +5,7 @@ import SplashScreen from "./components/SplashScreen";
 import SignUp from "./pages/auth/SignUp";
 import Completed from "./pages/general/Completed";
 import Dashboard from "./pages/general/Dashboard";
-import Progress from "./pages/general/progress";
+import Progress from "@/pages/general/Progress";
 import Home from "./pages/home/Home";
 import LandingPage from "./pages/LandingPage";
 
@@ -31,24 +31,32 @@ function App() {
       path: "/login",
       Component: LogIn,
     },
+    // --- AUTHENTICATED ROUTES WITH LOGOUT HEADER ---
     {
-      path: "/dashboard",
-      Component: Dashboard,
-    },
-    {
-      path: "/progress",
-      Component: Progress,
-    },
-    {
-      path: "/completed",
-      Component: Completed,
+    
+      children: [
+        {
+          path: "/dashboard",
+          Component: Dashboard,
+        },
+        {
+          path: "/progress",
+          Component: Progress,
+        },
+        {
+          path: "/completed",
+          Component: Completed,
+        },
+      ],
     },
   ]);
+
   return (
-    <div>
+    <>
       <RouterProvider router={router} />
       <Toaster position="top-center" />
-    </div>
+    </>
   );
 }
+
 export default App;
