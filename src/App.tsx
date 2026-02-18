@@ -3,7 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LogIn from "../src/pages/auth/LogIn";
 import SplashScreen from "./components/SplashScreen";
 import SignUp from "./pages/auth/SignUp";
-import Dashboard from "./pages/home/Dashboard";
+import Completed from "./pages/general/Completed";
+import Dashboard from "./pages/general/Dashboard";
+import Progress from "./pages/general/progress";
 import Home from "./pages/home/Home";
 import LandingPage from "./pages/LandingPage";
 
@@ -32,6 +34,14 @@ function App() {
     {
       path: "/dashboard",
       Component: Dashboard,
+    },
+    {
+      path: "/progress",
+      Component: Progress,
+    },
+    {
+      path: "/completed",
+      Component: Completed,
     },
   ]);
   return (

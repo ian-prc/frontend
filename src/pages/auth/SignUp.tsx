@@ -85,7 +85,10 @@ function SignUp() {
           />
         </div>
         <div className="pl-55">
-          <Link to="/login" className="text-white hover:underline">
+          <Link
+            to="/login"
+            className="text-white hover:underline hover:text-blue-500"
+          >
             Term and Condition
           </Link>
         </div>
