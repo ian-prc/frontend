@@ -1,4 +1,8 @@
 import AppLogo from "@/assets/app-logo.png";
+import DeleteModal from "@/components/Delete";
+import TaskUpdateModal from "@/components/Update";
+import { useAccountStore } from "@/stores/account/account.store";
+import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
@@ -6,8 +10,26 @@ import { RiProgress6Line } from "react-icons/ri";
 import { SiVirustotal } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 
+interface Task {
+  name: string;
+  status: "In Progress" | "Completed";
+}
+
 function Completed() {
   const navigate = useNavigate();
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState("");
+
+  const handleDeleteClick = (taskName: string) => {
+    setTaskToDelete(taskName);
+    setIsDeleteOpen(true);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 2. Explicitly type the state using the Task interface
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const tasks = [
     "Run 10000km",
@@ -15,6 +37,25 @@ function Completed() {
     "Nonstop Playing",
     "Swimming",
   ];
+
+  const handleEditClick = (taskName: string) => {
+    // 3. Use 'as const' to ensure the string is treated as a literal, not a generic string
+    setSelectedTask({
+      name: taskName,
+      status: "In Progress" as const,
+    });
+    setIsModalOpen(true);
+  };
+
+  // 3. Extract account data and the fetch function
+  const { account, loading, getAccount } = useAccountStore();
+
+  // 4. Fetch the account data when the component mounts
+  useEffect(() => {
+    if (!account) {
+      getAccount();
+    }
+  }, [account, getAccount]);
 
   return (
     <div className="w-screen min-h-screen bg-[#F5F5F5] p-4 flex flex-col items-center">
@@ -27,7 +68,7 @@ function Completed() {
           />
         </div>
         <h1 className="flex-1 text-center text-black font-bold italic tracking-wider">
-          YOUR PROGRESS
+          {loading ? "LOADING..." : `HELLO ${account?.name || "GUEST"}`}
         </h1>
         <div className="w-14" />
       </div>
@@ -39,7 +80,7 @@ function Completed() {
         >
           <SiVirustotal className="absolute right-2 top-2 w-10 h-10" />
           <h1 className="font-bold italic text-2xl">5</h1>
-          <p className="font-bold italic">Total</p>
+          <p className="font-bold italic">Total Task</p>
         </div>
 
         <div
@@ -68,28 +109,47 @@ function Completed() {
       </div>
 
       <div className="mt-5 flex flex-col gap-3 w-full  mb-10">
-        <div className="mt-8 flex flex-col gap-3 w-full  mb-10">
+        <div className="mt-8 flex flex-col gap-3 w-full mb-10">
           {tasks.map((task, index) => (
             <div
               key={index}
               className={`relative py-5 px-4 rounded-xl italic font-semibold flex justify-between items-center group transition-all
-                    ${index % 2 === 0 ? "bg-[#5f9598bb] text-white" : "bg-[#5F9598] text-white shadow-sm"}`}
+        ${index % 2 === 0 ? "bg-[#5f9598bb] text-black" : "bg-[#5F9598] text-black shadow-sm"}`}
             >
-              <span>{task}</span>
-              <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="truncate pr-4">{task}</span>
+
+              <div className="flex gap-4 items-center">
                 <FaRegEdit
-                  className="cursor-pointer hover:text-gray-200"
+                  onClick={() => handleEditClick(task)}
+                  className="cursor-pointer transition-colors hover:text-blue-500 text-lg"
                   title="Edit"
+                  size={20}
                 />
                 <MdDelete
-                  className="cursor-pointer hover:text-red-300"
+                  onClick={() => handleDeleteClick(task)}
+                  className="cursor-pointer transition-colors hover:text-red-500 text-lg"
                   title="Delete"
+                  size={22}
                 />
               </div>
             </div>
           ))}
         </div>
+        <TaskUpdateModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          // 4. Default fallback matches the Task type
+          taskInitialData={
+            selectedTask || { name: "", status: "To Do" as const }
+          }
+        />
       </div>
+      <DeleteModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => console.log("Deleting:", taskToDelete)}
+        itemName={taskToDelete}
+      />
     </div>
   );
 }
