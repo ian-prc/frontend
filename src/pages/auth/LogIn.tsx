@@ -13,7 +13,7 @@ function LogIn() {
     email: "",
     password: "",
   });
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +84,9 @@ function LogIn() {
               type="checkbox"
               className="w-4 h-4 rounded border-none accent-[#5F9598]"
             />
-            <span className="group-hover:text-gray-200 transition-colors">Remember me</span>
+            <span className="group-hover:text-gray-200 transition-colors">
+              Remember me
+            </span>
           </label>
           <Link
             to="/forgot-password"
@@ -110,7 +112,7 @@ function LogIn() {
           <p className="text-white text-sm">
             Don't have an account?{" "}
             <Link
-              to="/dashboard"
+              to="/signup"
               className="font-bold text-blue-100 hover:text-blue-300 hover:underline ml-1"
             >
               Register here

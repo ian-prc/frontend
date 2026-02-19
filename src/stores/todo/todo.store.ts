@@ -3,14 +3,14 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 // Api's
 import {
-  createTaskApi,
-  deleteTaskApi,
-  getTaskApi,
-  markTaskDoneApi,
-  updateTaskApi,
-} from "@/api/task/task.api";
+  addTodoApi,
+  deleteTodoApi,
+  getTodosApi,
+  markTodoDoneApi,
+  updateTodoApi,
+} from "@/api/todo/todo.api";
 // Types
-import type { TaskStoreType, TaskType } from "@/types/task/task.type";
+import type { TodoStoreType, TodoType } from "@/types/todo/todo.type";
 // Utils
 import { showError } from "@/utils/error/error.utils";
 import toast from "react-hot-toast";
@@ -35,10 +35,10 @@ async function processMarkDoneQueue() {
   markDoneProcessing = false;
 }
 
-export const useTaskStore = create(
-  persist<TaskStoreType>(
+export const useTodoStore = create(
+  persist<TodoStoreType>(
     (set, get) => ({
-      task: [],
+      todos: [],
       page: 0,
       limit: 15,
       hasMore: true,
@@ -51,7 +51,7 @@ export const useTaskStore = create(
       error: null,
       actionLoading: false,
 
-      getTask: async (searchTerm = "") => {
+      getTodos: async (searchTerm = "") => {
         const { limit } = get();
 
         set({
@@ -62,14 +62,14 @@ export const useTaskStore = create(
           page: 0,
           hasMore: true,
           total: 0,
-          task: [],
+          todos: [],
         });
 
         try {
-          const response = await getTaskApi(0, limit, searchTerm);
+          const response = await getTodosApi(0, limit, searchTerm);
 
           set({
-            task: response.task || [],
+            todos: response.todos || [],
             total: response.total || 0,
             hasMore: response.hasMore || false,
             page: 1,
@@ -90,13 +90,13 @@ export const useTaskStore = create(
         try {
           const currentSearch = searchTerm || state.searchTerm;
 
-          const response = await getTaskApi(
+          const response = await getTodosApi(
             state.page,
             state.limit,
             currentSearch,
           );
           set((prevState) => ({
-            task: [...prevState.task, ...(response.todos || [])],
+            todos: [...prevState.todos, ...(response.todos || [])],
             total: response.total || prevState.total,
             hasMore: response.hasMore || false,
             page: prevState.page + 1,
@@ -113,7 +113,7 @@ export const useTaskStore = create(
       },
       resetPagination: () => {
         set({
-          task: [],
+          todos: [],
           page: 0,
           hasMore: true,
           total: 0,
@@ -122,13 +122,13 @@ export const useTaskStore = create(
         });
       },
 
-      createTask: async (task, description?) => {
+      addTodo: async (title, description?) => {
         set({ actionLoading: true, error: null });
         try {
-          const response = await createTaskApi(task, description);
+          const response = await addTodoApi(title, description);
           const newTodo = response.newTodo;
           set((prevState) => ({
-            task: [newTodo, ...prevState.task],
+            todos: [newTodo, ...prevState.todos],
             total: prevState.total + 1,
           }));
           return true;
@@ -140,18 +140,18 @@ export const useTaskStore = create(
           set({ actionLoading: false });
         }
       },
-      updateTask: async (id, data) => {
+      updateTodo: async (id, data) => {
         set({ actionLoading: true, error: null });
 
         try {
-          const response = await updateTaskApi(id, data);
+          const response = await updateTodoApi(id, data);
           const updated = (response.updatedTodo ?? response.todo) as
-            | TaskType
+            | TodoType
             | undefined;
 
           if (updated) {
             set((prev) => ({
-              task: prev.task.map((t) => (t._id === id ? updated : t)),
+              todos: prev.todos.map((t) => (t._id === id ? updated : t)),
             }));
           }
 
@@ -164,19 +164,19 @@ export const useTaskStore = create(
           set({ actionLoading: false });
         }
       },
-      markTaskDone: async (id, done) => {
+      markTodoDone: async (id, done) => {
         // Enqueue the mark-done operation so requests are processed one at a time
         return new Promise<boolean>((resolve) => {
           markDoneQueue.push(async () => {
             const state = get();
 
-            const idx = state.task.findIndex((t) => t._id === id);
+            const idx = state.todos.findIndex((t) => t._id === id);
             if (idx === -1) {
               resolve(false);
               return;
             }
 
-            const prevDone = state.task[idx].done;
+            const prevDone = state.todos[idx].done;
             if (prevDone === done) {
               // No-op if status already matches
               resolve(true);
@@ -193,42 +193,42 @@ export const useTaskStore = create(
 
             // Optimistic update: only update if value actually changes to avoid extra renders
             set((prev) => {
-              const i = prev.task.findIndex((t) => t._id === id);
+              const i = prev.todos.findIndex((t) => t._id === id);
               if (i === -1) return prev;
-              const current = prev.task[i];
+              const current = prev.todos[i];
               if (current.done === done) return prev;
-              const next = prev.task.slice();
+              const next = prev.todos.slice();
               next[i] = { ...current, done };
-              return { task: next } as Partial<TaskStoreType> as TaskStoreType;
+              return { todos: next } as Partial<TodoStoreType> as TodoStoreType;
             });
 
             set({ actionLoading: true, error: null });
 
             try {
-              const response = await markTaskDoneApi(id, done);
-              const updated = (response.updatedTask ?? response.task) as
-                | TaskType
+              const response = await markTodoDoneApi(id, done);
+              const updated = (response.updatedTodo ?? response.todo) as
+                | TodoType
                 | undefined;
 
               if (updated) {
                 set((prev) => {
-                  const i = prev.task.findIndex((t) => t._id === id);
+                  const i = prev.todos.findIndex((t) => t._id === id);
                   if (i === -1) return prev;
-                  const curr = prev.task[i];
+                  const curr = prev.todos[i];
                   // Only replace if there's an actual difference
                   if (
                     curr._id === updated._id &&
-                    curr.task === updated.task &&
+                    curr.title === updated.title &&
                     curr.description === updated.description &&
                     curr.done === updated.done
                   ) {
                     return prev;
                   }
-                  const next = prev.task.slice();
+                  const next = prev.todos.slice();
                   next[i] = updated;
                   return {
-                    task: next,
-                  } as Partial<TaskStoreType> as TaskStoreType;
+                    todos: next,
+                  } as Partial<TodoStoreType> as TodoStoreType;
                 });
               }
 
@@ -239,15 +239,15 @@ export const useTaskStore = create(
 
               // Revert optimistic update on failure
               set((prev) => {
-                const i = prev.task.findIndex((t) => t._id === id);
+                const i = prev.todos.findIndex((t) => t._id === id);
                 if (i === -1) return prev;
-                const curr = prev.task[i];
+                const curr = prev.todos[i];
                 if (curr.done === prevDone) return prev;
-                const next = prev.task.slice();
+                const next = prev.todos.slice();
                 next[i] = { ...curr, done: prevDone };
                 return {
                   todos: next,
-                } as Partial<TaskStoreType> as TaskStoreType;
+                } as Partial<TodoStoreType> as TodoStoreType;
               });
 
               resolve(false);
@@ -260,16 +260,16 @@ export const useTaskStore = create(
           void processMarkDoneQueue();
         });
       },
-      deleteTask: async (id) => {
+      deleteTodo: async (id) => {
         set({ actionLoading: true, error: null });
 
         try {
-          const response = await deleteTaskApi(id);
-          toast.success(response.message || "Task deleted");
+          const response = await deleteTodoApi(id);
+          toast.success(response.message || "Todo deleted");
           set((prev) => {
-            const nextTask = prev.task.filter((t) => t._id !== id);
+            const nextTodos = prev.todos.filter((t) => t._id !== id);
             return {
-              task: nextTask,
+              todos: nextTodos,
               total: Math.max(0, prev.total - 1),
             };
           });
@@ -277,7 +277,7 @@ export const useTaskStore = create(
           return true;
         } catch (error) {
           showError(error);
-          set({ error: "Failed to delete task" });
+          set({ error: "Failed to delete todo" });
           return false;
         } finally {
           set({ actionLoading: false });
@@ -285,7 +285,7 @@ export const useTaskStore = create(
       },
     }),
     {
-      name: "task-store",
+      name: "todos-store",
       storage: createJSONStorage(() => sessionStorage),
     },
   ),

@@ -18,12 +18,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div className="fixed inset-0  flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-     
       <div className="w-full max-w-sm transform overflow-hidden rounded-2xl bg-white p-6 shadow-2xl transition-all border border-slate-100">
-        
         <div className="flex flex-col items-center text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full mb-4">
-            <TiDeleteOutline className="h-15 w-15 text-red-700" />
+            <TiDeleteOutline className="h-15 w-15 text-red-900" />
           </div>
 
           <h3 className="text-lg font-semibold text-slate-900">Delete Task?</h3>
@@ -36,7 +34,6 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           </p>
         </div>
 
-     
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
           <button
             onClick={onClose}
@@ -49,7 +46,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               onConfirm();
               onClose();
             }}
-            className="w-full sm:w-auto rounded-lg bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-red-200 hover:bg-red-700 active:scale-95 transition-all"
+            className="w-full sm:w-auto rounded-lg bg-red-900 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-red-200 hover:bg-red-700 active:scale-95 transition-all"
           >
             Yes, Delete
           </button>

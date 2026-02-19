@@ -1,6 +1,5 @@
 import axiosInstance from "@/axios/axios-instances";
 import type { AccountType } from "@/types/account/account.type";
-import { data } from "react-router-dom";
 
 export const registerApi = async (data: Partial<AccountType>) => {
   const response = await axiosInstance.post("/auth/register", data);
@@ -13,6 +12,6 @@ export const loginApi = async (data: Partial<AccountType>) => {
 };
 
 export const logoutApi = async () => {
-  const response = await axiosInstance.post("/auth/logout", data);
+  const response = await axiosInstance.post("/auth/logout");
   return response.data;
 };

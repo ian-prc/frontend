@@ -1,22 +1,25 @@
-import { loginApi, logoutApi, registerApi } from "@/api/auth/auth.api";
-import type { AuthStoreType } from "@/types/auth/auth.type";
-import { showError } from "@/utils/error/error.utils";
+// Libraries
 import toast from "react-hot-toast";
 import { create } from "zustand";
+// Types
+import type { AuthStoreType } from "@/types/auth/auth.type";
+// Utils
+import { showError } from "@/utils/error/error.utils";
+// APi's
+import { loginApi, logoutApi, registerApi } from "@/api/auth/auth.api";
 
 export const useAuthStore = create<AuthStoreType>((set) => ({
   loading: false,
+
   setRegister: async (data) => {
     set({
       loading: true,
     });
     try {
       const response = await registerApi(data);
-      console.log("Response: ", response);
       toast.success(response.message);
-      return true;
+      return response.accessToken;
     } catch (error) {
-      console.log(error);
       showError(error);
       return false;
     } finally {
@@ -30,9 +33,8 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
     try {
       const response = await loginApi(data);
       toast.success(response.message);
-      return true;
+      return response.accessToken;
     } catch (error) {
-      console.error(error);
       showError(error);
       return false;
     } finally {
@@ -48,7 +50,7 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
       toast.success(response.message);
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       showError(error);
       return false;
     } finally {

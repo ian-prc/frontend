@@ -1,12 +1,12 @@
-export type TaskType = {
+export type TodoType = {
   _id: string;
-  task: string;
+  title: string;
   description?: string;
   done: boolean;
 };
 
-export type TaskStoreType = {
-  task: TaskType[];
+export type TodoStoreType = {
+  todos: TodoType[];
   page: number;
   limit: number;
   hasMore: boolean;
@@ -19,15 +19,15 @@ export type TaskStoreType = {
   error: string | null;
   actionLoading: boolean;
 
-  getTask: (searchTerm?: string) => Promise<void>;
+  getTodos: (searchTerm?: string) => Promise<void>;
   loadMoreTodos: (searchTerm?: string) => Promise<boolean>;
   resetPagination: () => void;
 
-  createTask: (task: string, description?: string) => Promise<boolean>;
-  updateTask: (
+  addTodo: (title: string, description?: string) => Promise<boolean>;
+  updateTodo: (
     id: string,
-    data: { task?: string; description?: string },
+    data: { title?: string; description?: string },
   ) => Promise<boolean>;
-  markTaskDone: (id: string, done: boolean) => Promise<boolean>;
-  deleteTask: (id: string) => Promise<boolean>;
+  markTodoDone: (id: string, done: boolean) => Promise<boolean>;
+  deleteTodo: (id: string) => Promise<boolean>;
 };

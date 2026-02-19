@@ -1,28 +1,31 @@
 import React, { useState } from "react";
 
 // 1. Define the shape of your task data
-interface Task {
+interface Todo {
   id?: string | number;
-  name: string;
-  status: "To Do" | "In Progress" | "Review" | "Completed";
+  title: string;
+  done: boolean;
+  description: "In Progress" | "Completed";
 }
 
 // 2. Define the Props interface
-interface TaskUpdateModalProps {
+interface TodoUpdateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  taskInitialData?: Task; // This clears the "any" error
+  TodoUpdateModal?: Todo; // This clears the "any" error
 }
 
-const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
+const Update: React.FC<TodoUpdateModalProps> = ({
   isOpen,
   onClose,
-  taskInitialData,
+  TodoUpdateModal,
 }) => {
   // 3. Provide fallback values to avoid undefined errors
-  const [taskName, setTaskName] = useState<string>(taskInitialData?.name || "");
-  const [status, setStatus] = useState<Task["status"]>(
-    taskInitialData?.status || "To Do",
+  const [todoName, setTodoName] = useState<string>(
+    TodoUpdateModal?.title || "",
+  );
+  const [description, setDescription] = useState<Todo["description"]>(
+    TodoUpdateModal?.description || "In Progress",
   );
 
   if (!isOpen) return null;
@@ -41,8 +44,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
             </label>
             <input
               type="text"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
+              value={todoName}
+              onChange={(e) => setTodoName(e.target.value)}
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-slate-900 focus:border-indigo-500 outline-none"
             />
           </div>
@@ -52,8 +55,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               Status
             </label>
             <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as Task["status"])}
+              value={description}
+              onChange={(e) =>
+                setDescription(e.target.value as Todo["description"])
+              }
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-slate-900 focus:border-indigo-500 outline-none"
             >
               <option value="In Progress">In Progress</option>
@@ -72,10 +77,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                console.log("Updated:", { taskName, status });
+                console.log("Updated:", { todoName, description });
                 onClose();
               }}
-              className="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+              className="rounded-lg bg-[#00449D] px-5 py-2 text-sm font-semibold text-white hover:bg-blue-950"
             >
               Save Changes
             </button>
@@ -86,4 +91,4 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
   );
 };
 
-export default TaskUpdateModal;
+export default Update;

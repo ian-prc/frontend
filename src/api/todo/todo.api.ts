@@ -1,6 +1,6 @@
 import axiosInstance from "@/axios/axios-instances";
 
-export const getTaskApi = async (
+export const getTodosApi = async (
   page: number = 0,
   limit: number = 15,
   search: string = "",
@@ -11,7 +11,7 @@ export const getTaskApi = async (
   return response.data;
 };
 
-export const createTaskApi = async (title: string, description?: string) => {
+export const addTodoApi = async (title: string, description?: string) => {
   const response = await axiosInstance.post("/todo/add", {
     title,
     description,
@@ -19,7 +19,7 @@ export const createTaskApi = async (title: string, description?: string) => {
   return response.data;
 };
 
-export const updateTaskApi = async (
+export const updateTodoApi = async (
   id: string,
   data: { title?: string; description?: string },
 ) => {
@@ -27,12 +27,12 @@ export const updateTaskApi = async (
   return response.data;
 };
 
-export const markTaskDoneApi = async (id: string, done: boolean) => {
+export const markTodoDoneApi = async (id: string, done: boolean) => {
   const response = await axiosInstance.patch(`/todo/done/${id}`, { done });
   return response.data;
 };
 
-export const deleteTaskApi = async (id: string) => {
+export const deleteTodoApi = async (id: string) => {
   const response = await axiosInstance.delete(`/todo/delete/${id}`);
   return response.data;
 };
