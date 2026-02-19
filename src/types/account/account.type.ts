@@ -11,3 +11,4 @@ export type AccountStoreType = {
   getAccount: () => Promise<boolean>;
   clearAccount: () => void;
 };
+

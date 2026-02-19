@@ -1,5 +1,6 @@
 import AppLogo from "@/assets/app-logo.png";
 import DeleteModal from "@/components/Delete";
+import LogOut from "@/components/LogOut";
 import Update from "@/components/Update";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useTodoStore } from "@/stores/todo/todo.store";
@@ -19,12 +20,9 @@ function Completed() {
   const { account, loading, getAccount } = useAccountStore();
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // FIX: Added missing states that were being used in handlers
   const [todoToDelete, setTodoToDelete] = useState<string | undefined>();
-  const [selectedTodo, setSelectedTodo] = useState<TodoType | undefined>(
-    undefined,
-  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState<TodoType | undefined>();
 
   useEffect(() => {
     getTodos();
@@ -34,22 +32,22 @@ function Completed() {
     if (!account) getAccount();
   }, [account, getAccount]);
 
+//Counters
   const totalCount = useMemo(() => todos?.length || 0, [todos]);
 
   const progressCount = useMemo(
-    () => (todos || []).filter((t) => t.title === "In Progress").length,
-    [todos],
-  );
-
-  const completedCount = useMemo(
-    () => (todos || []).filter((t) => t.title === "Completed").length,
-    [todos],
+    () => (todos || []).filter((t) => t.done === false).length,
+    [todos]
   );
 
   const completedTodos = useMemo(
-    () => (todos || []).filter((t) => t.title === "Completed"),
-    [todos],
+    () => (todos || []).filter((t) => t.done === true),
+    [todos]
   );
+
+  const completedCount = completedTodos.length;
+
+// Delete and Update
 
   const handleDeleteClick = (id: string) => {
     setTodoToDelete(id);
@@ -61,15 +59,24 @@ function Completed() {
     setIsModalOpen(true);
   };
 
+
+
   return (
+<div className="w-screen min-h-screen bg-[#F5F5F5]">
+
+       <LogOut />
+
     <div className="w-screen min-h-screen bg-[#F5F5F5] p-4 flex flex-col items-center">
+      
       <div className="bg-[#5F9598] w-full max-w-4xl h-20 rounded-xl relative flex items-center px-4 shadow-md">
         <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm">
           <img src={AppLogo} alt="Logo" className="w-10 h-10 object-contain" />
         </div>
+
         <h1 className="flex-1 text-center font-bold italic text-white uppercase">
           {loading ? "LOADING..." : `HELLO ${account?.name || "GUEST"}`}
         </h1>
+
         <div className="w-14" />
       </div>
 
@@ -83,6 +90,7 @@ function Completed() {
           <p className="font-bold italic">Total Task</p>
         </div>
 
+
         <div
           onClick={() => navigate("/progress")}
           className="bg-white text-[#841427] p-4 border-2 border-[#841427] rounded-xl relative cursor-pointer"
@@ -92,10 +100,7 @@ function Completed() {
           <p className="font-bold italic">In Progress</p>
         </div>
 
-        <div
-          onClick={() => navigate("/completed")}
-          className="col-span-2 bg-white border-2 border-[#12A122] text-[#12A122] p-4 rounded-xl relative cursor-pointer"
-        >
+        <div className="col-span-2 bg-white border-2 border-[#12A122] text-[#12A122] p-4 rounded-xl relative">
           <IoMdCheckmarkCircleOutline className="absolute right-4 top-2 w-12 h-12" />
           <h1 className="font-bold italic text-2xl">{completedCount}</h1>
           <p className="font-bold italic">Completed</p>
@@ -103,39 +108,30 @@ function Completed() {
       </div>
 
       <div className="mt-8 flex flex-col gap-3 w-full max-w-4xl mb-10">
-        {completedTodos.length > 0 ? (
-          completedTodos.map((item, index) => (
-            <div
-              key={item._id}
-              className={`py-5 px-4 rounded-xl italic font-semibold flex justify-between items-center text-white
-                ${index % 2 === 0 ? "bg-[#5f9598e1]" : "bg-[#2b787c]"}`}
-            >
-              <span>
-                <small className="opacity-70 mr-2">
-                  ID: {item._id.slice(-4)}
-                </small>{" "}
-                — {item.title}
-              </span>
+        {completedTodos.map((item, index) => (
+          <div
+            key={item._id}
+            className={`py-5 px-4 rounded-xl italic font-semibold flex justify-between items-center text-black
+              ${index % 2 === 0 ? "bg-[#5f9598e1]" : "bg-[#2b787c]"}`}
+          >
+            <span>
+              {item.title} — <small className="opacity-80">Completed</small>
+            </span>
 
-              <div className="flex gap-4 items-center">
-                <FaRegEdit
-                  size={20}
-                  onClick={() => handleEditClick(item)}
-                  className="cursor-pointer hover:text-blue-200"
-                />
-                <MdDelete
-                  size={22}
-                  onClick={() => handleDeleteClick(item._id)}
-                  className="cursor-pointer hover:text-red-300"
-                />
-              </div>
+            <div className="flex gap-4 items-center">
+              <FaRegEdit
+                size={20}
+                onClick={() => handleEditClick(item)}
+                className="cursor-pointer hover:text-blue-200"
+              />
+              <MdDelete
+                size={22}
+                onClick={() => handleDeleteClick(item._id!)}
+                className="cursor-pointer hover:text-red-300"
+              />
             </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-500 italic mt-10">
-            No completed tasks yet.
-          </p>
-        )}
+          </div>
+        ))}
       </div>
 
       <Update
@@ -153,6 +149,7 @@ function Completed() {
         }}
         itemName="todo"
       />
+    </div>
     </div>
   );
 }

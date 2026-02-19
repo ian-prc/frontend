@@ -11,7 +11,7 @@ const TermsAndConditions: React.FC<TermsProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      {/* Modal Container */}
+      
       <div className="relative bg-[#1D546D] w-full max-w-2xl h-190 rounded-xl flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
 
         <button 
@@ -21,7 +21,7 @@ const TermsAndConditions: React.FC<TermsProps> = ({ isOpen, onClose }) => {
           <IoMdClose size={28} />
         </button>
 
-        {/* Content Area */}
+
         <div className=" p-8 pb-8 flex flex-col h-full">
           <h2 className="text-white text-2xl font-bold text-center mb-6">
             Terms & Conditions
@@ -49,7 +49,7 @@ The application must only be used for lawful and appropriate purposes
             </p>
           </div>
 
-          {/* Action Button */}
+        
           <div className="mt-8 flex justify-center">
             <button
               onClick={onClose}

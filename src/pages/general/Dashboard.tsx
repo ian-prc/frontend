@@ -1,4 +1,6 @@
 import AppLogo from "@/assets/app-logo.png";
+import LogOut from "@/components/LogOut";
+
 import DeleteModal from "@/components/Delete";
 import { useAccountStore } from "@/stores/account/account.store";
 import { useTodoStore } from "@/stores/todo/todo.store";
@@ -23,9 +25,9 @@ function Dashboard() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [todoToDelete, setTodoToDelete] = useState<string | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTodo, setSelectedTodo] = useState<TodoType | undefined>(
-    undefined,
-  );
+  const [selectedTodo, setSelectedTodo] = useState<TodoType | undefined>();
+
+
 
   useEffect(() => {
     getTodos();
@@ -35,21 +37,30 @@ function Dashboard() {
     if (!account) getAccount();
   }, [account, getAccount]);
 
+// Counters
+
   const totalCount = useMemo(() => todos?.length || 0, [todos]);
 
+
   const progressCount = useMemo(
-    () => (todos || []).filter((t) => t.title === "In Progress").length,
+    () => (todos || []).filter((t) => t.done === false).length,
     [todos],
   );
+
 
   const completedCount = useMemo(
-    () => (todos || []).filter((t) => t.title === "Completed").length,
+    () => (todos || []).filter((t) => t.done === true).length,
     [todos],
   );
 
+
+// Add, Update, and Delete
   const handleAddTask = async () => {
     if (!todoName.trim()) return;
+
+
     await addTodo(todoName);
+
     setTodoName("");
   };
 
@@ -63,18 +74,29 @@ function Dashboard() {
     setIsModalOpen(true);
   };
 
+
+
   return (
+
+    <div className="w-screen min-h-screen bg-[#F5F5F5]">
+
+       <LogOut />
+
     <div className="w-screen min-h-screen bg-[#F5F5F5] p-4 flex flex-col items-center">
+   
       <div className="bg-[#5F9598] w-full max-w-4xl h-20 rounded-xl relative flex items-center px-4 shadow-md">
         <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm">
           <img src={AppLogo} alt="Logo" className="w-10 h-10 object-contain" />
         </div>
+
         <h1 className="flex-1 text-center font-bold italic text-white uppercase">
           {loading ? "LOADING..." : `HELLO ${account?.name || "GUEST"}`}
         </h1>
+
         <div className="w-14" />
       </div>
 
+ 
       <div className="grid grid-cols-2 gap-4 w-full mt-10 max-w-4xl">
         <div
           onClick={() => navigate("/dashboard")}
@@ -104,30 +126,42 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="mt-10 flex items-center gap-2 w-full max-w-4xl">
-        <input
-          value={todoName}
-          onChange={(e) => setTodoName(e.target.value)}
-          placeholder="Add Task"
-          className="bg-white border-2 border-gray-300 rounded-xl flex-1 py-3 px-4 font-bold italic outline-none"
-        />
-        <button
-          onClick={handleAddTask}
-          className="bg-[#5F9598] text-white font-bold py-3 px-6 rounded-xl hover:scale-105 transition-transform"
-        >
-          Add
-        </button>
-      </div>
+
+<div className="mt-10 flex items-center gap-2 w-full max-w-4xl">
+  <input
+    value={todoName}
+    onChange={(e) => setTodoName(e.target.value)}
+    placeholder="Enter Task"
+    className="bg-white border-2 border-gray-300 rounded-xl flex-1 py-3 px-4 font-bold italic outline-none"
+  />
+
+  <button
+    onClick={handleAddTask}
+    disabled={!todoName.trim()}
+    className={`font-bold py-3 px-6 rounded-xl transition-transform
+      ${todoName.trim() 
+        ? "bg-[#5F9598] text-white hover:scale-105" 
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+      }`}
+  >
+    Add
+  </button>
+</div>
+
 
       <div className="mt-8 flex flex-col gap-3 w-full max-w-4xl mb-10">
         {todos?.map((item, index) => (
           <div
             key={item._id}
-            className={`py-5 px-4 rounded-xl italic font-semibold flex justify-between items-center text-white
+            className={`py-5 px-4 rounded-xl italic font-semibold flex justify-between items-center text-black
               ${index % 2 === 0 ? "bg-[#5f9598e1]" : "bg-[#2b787c]"}`}
           >
+     
             <span>
-              {item.title} — <small className="opacity-80">{item.done}</small>
+              {item.title} —{" "}
+              <small className="opacity-80">
+                {item.done ? "Completed" : "In Progress"}
+              </small>
             </span>
 
             <div className="flex gap-4 items-center">
@@ -136,15 +170,18 @@ function Dashboard() {
                 onClick={() => handleEditClick(item)}
                 className="cursor-pointer hover:text-blue-200"
               />
+
+ 
               <MdDelete
                 size={22}
-                onClick={() => handleDeleteClick(item.title)}
+                onClick={() => handleDeleteClick(item._id!)}
                 className="cursor-pointer hover:text-red-300"
               />
             </div>
           </div>
         ))}
       </div>
+
 
       <Update
         isOpen={isModalOpen}
@@ -161,6 +198,7 @@ function Dashboard() {
         }}
         itemName="todo"
       />
+    </div>
     </div>
   );
 }

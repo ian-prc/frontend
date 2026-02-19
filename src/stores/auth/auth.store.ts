@@ -1,60 +1,60 @@
-// Libraries
-import toast from "react-hot-toast";
 import { create } from "zustand";
-// Types
-import type { AuthStoreType } from "@/types/auth/auth.type";
-// Utils
-import { showError } from "@/utils/error/error.utils";
-// APi's
-import { loginApi, logoutApi, registerApi } from "@/api/auth/auth.api";
+import axiosInstance from "@/axios/axios-instances";
+import type { AccountType } from "@/types/account/account.type";
+
+interface AuthStoreType {
+  user?: AccountType;
+  loading: boolean;
+  setLogin: (form: Partial<AccountType>) => Promise<boolean>;
+  setRegister: (form: Partial<AccountType>) => Promise<boolean>;
+  logout: () => Promise<void>;
+}
 
 export const useAuthStore = create<AuthStoreType>((set) => ({
+  user: undefined,
   loading: false,
 
-  setRegister: async (data) => {
-    set({
-      loading: true,
-    });
-    try {
-      const response = await registerApi(data);
-      toast.success(response.message);
-      return response.accessToken;
-    } catch (error) {
-      showError(error);
-      return false;
-    } finally {
-      set({
-        loading: false,
-      });
-    }
-  },
-  setLogin: async (data) => {
+
+  setRegister: async (Form) => {
     set({ loading: true });
     try {
-      const response = await loginApi(data);
-      toast.success(response.message);
-      return response.accessToken;
-    } catch (error) {
-      showError(error);
-      return false;
-    } finally {
-      set({
-        loading: false,
-      });
-    }
-  },
-  logout: async () => {
-    set({ loading: true });
-    try {
-      const response = await logoutApi();
-      toast.success(response.message);
+      await axiosInstance.post("/auth/register", Form);
+      set({ loading: false });
       return true;
     } catch (error) {
-      console.error(error);
-      showError(error);
-      return false;
-    } finally {
+      console.error("Register failed:", error);
       set({ loading: false });
+      return false;
     }
+  },
+
+
+
+  setLogin: async (form) => {
+    set({ loading: true });
+    try {
+      const response = await axiosInstance.post("/auth/login", form);
+
+      const token = response.data.accessToken;
+      const user = response.data.user;
+
+      if (token) {
+        localStorage.setItem("accessToken", token);
+        (axiosInstance.defaults.headers.common as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+      }
+
+      set({ user, loading: false });
+      return true;
+    } catch (error) {
+      console.error("Login failed:", error);
+      set({ loading: false });
+      return false;
+    }
+  },
+
+  logout: async () => {
+    localStorage.removeItem("accessToken");
+    delete (axiosInstance.defaults.headers.common as Record<string, string>)["Authorization"];
+    set({ user: undefined });
   },
 }));
