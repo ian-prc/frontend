@@ -35,13 +35,11 @@ function LogIn() {
         onSubmit={submitForm}
         className="relative bg-[#1D546D] w-full mt-80 h-150 pt-24 pb-12 px-10 rounded-2xl flex flex-col gap-6 shadow-2xl"
       >
-  
         <div className="absolute -top-60 left-1/2 -translate-x-1/2">
           <div className="bg-[#F5F5F5] rounded-full  p-2">
             <FaRegUserCircle className="text-[180px] text-[#5F9598]" />
           </div>
         </div>
-
 
         <div className="relative mt-4">
           <MdEmail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
@@ -55,7 +53,6 @@ function LogIn() {
             className="w-full bg-white py-3.5 pl-12 pr-6 rounded-full outline-none focus:ring-2 focus:ring-[#5F9598] transition-all"
           />
         </div>
-
 
         <div className="relative">
           <IoIosLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
@@ -77,7 +74,6 @@ function LogIn() {
           </button>
         </div>
 
-       
         <div className="flex items-center justify-between px-2 text-sm">
           <label className="flex items-center space-x-2 text-white cursor-pointer group">
             <input
@@ -96,7 +92,6 @@ function LogIn() {
           </Link>
         </div>
 
-   
         <div className="flex justify-center mt-4">
           <button
             type="submit"
@@ -107,7 +102,6 @@ function LogIn() {
           </button>
         </div>
 
-     
         <div className="text-center mt-4">
           <p className="text-white text-sm">
             Don't have an account?{" "}

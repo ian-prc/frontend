@@ -1,11 +1,12 @@
+import Progress from "@/pages/general/Progress";
 import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LogIn from "../src/pages/auth/LogIn";
+import ForgotPassword from "./components/ForgotPassword";
 import SplashScreen from "./components/SplashScreen";
 import SignUp from "./pages/auth/SignUp";
 import Completed from "./pages/general/Completed";
 import Dashboard from "./pages/general/Dashboard";
-import Progress from "@/pages/general/Progress";
 import Home from "./pages/home/Home";
 import LandingPage from "./pages/LandingPage";
 
@@ -31,9 +32,13 @@ function App() {
       path: "/login",
       Component: LogIn,
     },
-    // --- AUTHENTICATED ROUTES WITH LOGOUT HEADER ---
+
     {
-    
+      path: "/forgot-password",
+      Component: ForgotPassword,
+    },
+
+    {
       children: [
         {
           path: "/dashboard",
